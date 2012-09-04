@@ -1,0 +1,3 @@
+#define CLUSTER_PORT	3010
+#define CLUSTER_SYNC	32
+#define CLUSTER_BYTESEX	0xa12bc34d

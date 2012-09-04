@@ -1,0 +1,56 @@
+.TH ckeygen 1 "1.0" "Internet Connection, Inc." "Ad-Hoc Clusters"
+.SH NAME
+ckeygen \- generate keypairs for cluster applications
+.SH SYNOPSIS
+.B ckeygen [-stdin] appid [appid.pub]
+
+Generates a new private and public keypair called
+.B appid
+and
+.B appid.pub
+respectively.
+.SH DESCRIPTION
+Every clustered application is identified on a network by its keypair.
+Both parts of the keypair are considered secret- any host/user allowed
+access to the public-key portion can create work to do, and any host/user
+with the private key can provide answers.
+
+.I cservice(1)
+uses the private key and serves an application associated with it
+to the cluster.
+.I cexec(1)
+uses the public key to locate a running
+.I cservice(1)
+with that private key and to authenticate it.
+
+If
+.B appid
+already exists, a public key will be created for it (if possible).
+.SH OPTIONS
+.B -stdin
+will cause ckeygen to generate a private key based on the SHA-1 hash
+of standard input. This can be useful in generating keys to a version.
+.SH EXIT CODES
+.B ckeygen
+will exit 101 if the private key exists, and is invalid.
+
+.B ckeygen
+will exit 102 if it cannot create/write to the public key.
+
+.B ckeygen
+will exit 103 if it cannot create/write to the private key.
+
+.B ckeygen
+will exit 104 if generating a key from stdin and it doesn't match the
+already existing private key that is supplied on the commandline.
+
+.B ckeygen
+will exit 111 in the face of temporary errors (like allocating memory).
+
+.B ckeygen
+will exit 255 if there was a problem emitting its help text.
+
+.B ckeygen
+will exit 0 if everything (otherwise) completed successfully.
+.SH SEE ALSO
+cexec(1), cservice(1)

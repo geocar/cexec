@@ -1,0 +1,66 @@
+cexec is a toolkit for building ad-hoc clusters.
+
+The documentation for all the tools (cexec, cservice, ckeygen, etc) are in
+standard manual-page format.
+
+To install cexec, you need to first build it (type make) then copy the
+executables into /usr/local/bin or someplace in your path. You'll probably
+want to copy the manual pages (*.1) someplace in your $MANPATH.
+
+Note that the cexec on-wire protocol is still evolving in incompatible ways;
+It's not wise to try and use the cluster tools across administrative domains.
+
+A cexec "cluster" consists of:
+	* One or more applications
+
+	* An announcement address. This can be a broadcast address, or
+	a multicast address. It could also be a unicast address, but then
+	that wouldn't allow for other servers. The default is probably fine
+	for most people (255.255.255.255) - this value should be stored
+	in the $GROUP environment variable.
+
+	* A bunch of general-purpose unix-like machines
+
+	* A keypair that identifies applications,
+	and mutually authenticates clients/servers
+
+To build a cexec cluster, you need to decide on your applications, announcement
+address, and have computers to run it. As an example, we'll build a cluster-
+enabled version of "oggenc". This example assumes you've already got
+oggenc installed, and you already got your machines together:
+
+0. Build the keypair using "ckeygen"
+	ckeygen distributed_ogg distributed_ogg.pub
+
+1. Distribute the "distributed_ogg" key to all of your "worker machines"
+
+2. Distribute the "distributed_ogg.pub" key to all of your "client machines"
+
+3. Start the service on all your workers:
+	cservice distributed_ogg oggenc -o- -
+
+4. Start a logger service on any worker or client:
+	crat
+
+5. Encode something :)
+	cexec distributed_ogg.pub < input.wav > output.ogg
+
+You could've used any application- not just "oggenc"- with this cluster. You
+could make this cluster as big as you want (with multicast tunnels) and cross
+as many networks as you want (with cproxy).
+
+When "cexec" starts up, it locates the "best" copy of cservice on the network.
+It does this by broadcasting announcements. One of the cservice machines
+will attempt to "connect back" to the cexec after a delay that's proportional
+to the systems' load. The first machine to "reach back" and perform the
+various challenges regarding the keypair is the winner.
+
+At this point, cexec multiplexes the local file descriptors over the work-
+channel and cservice does the reverse on the other side. cservice uses pipes
+where possible, but will use socketpair() to emulate readwrite devices like
+terminals and sockets.
+
+When "cservice" is done, it sends it's exit code back to "cexec". If "cexec"
+didn't like any part of the protocol exchange, it "complains". If everything
+went okay, it announces the exit code in the same way. These "alerts" are
+received by a "crat" running on the network.

@@ -1,0 +1,32 @@
+.TH cproxy 1 "1.0" "Internet Connection, Inc." "Ad-Hoc Clusters"
+.SH NAME
+cproxy \- logically join two clusters
+.SH SYNOPSIS
+.B cproxy self target
+
+Relays announcements between
+.B $GROUP
+and
+.B target
+as well as rewrites source/destination addresses to pass through cproxy.
+.SH DESCRIPTION
+.B cproxy
+is useful for launching man-in-the-middle attacks against
+.I cexec(1)
+but it's also useful for proxying jobs over a wide-area network.
+
+.B cproxy
+attempts to detect loops within itself, but running two copies of
+.B cproxy
+on the same network in opposite directions can easily eat a large
+chunk of bandwidth. Don't do it. Use DMZ or mrouted if possible.
+.SH ENVIRONMENT
+.B $GROUP
+\- contains the "group name" - an IP address (possibly multicast) representing
+the address to be used for receiving job requests.
+.I Default: 255.255.255.255
+.SH EXIT CODES
+.B cproxy
+normally doesn't exit. All exit codes are errors.
+.SH SEE ALSO
+ckeygen(1), cexec(1), cservice(1), crat(1)

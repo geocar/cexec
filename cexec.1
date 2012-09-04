@@ -1,0 +1,103 @@
+.TH cexec 1 "1.0" "Internet Connection, Inc." "Ad-Hoc Clusters"
+.SH NAME
+cexec \- submit work for a cluster application
+.SH SYNOPSIS
+.B cexec appid.pub [peer env]
+
+Locates a copy of
+.I cservice(1)
+running with the private key for
+.B appid.pub
+and runs the (possibly) remote application otherwise transparently.
+.SH DESCRIPTION
+.B cexec
+first locates a running copy of
+.I cservice(1)
+on the network called
+.I $CEXEC_GROUP
+or
+.I $GROUP
+and waits for a job-acceptance connection.
+.B cexec
+then ties all of the file descriptors up to
+.I $CEXEC_MAXFD
+or
+.I $MAXFD
+and multiplexes them over the connection to the running
+.I cservice(1)
+which is doing the same task for the application it is running.
+
+.B cexec
+can be thought of like
+.I rexec(1)
+except instead of specifying a host to run the task on,
+.B cexec
+will run the task on the least-loaded most-capable host on the network.
+
+The
+.B peer env
+is a list of environment variables and their values (remember to quote!)
+in
+.I KEY=VALUE
+format. These are prefaced with the string
+.B PEER_
+by
+.I cservice(1)
+before the application has a chance to see them.
+.SH ENVIRONMENT
+.B $CEXEC_GROUP
+or
+.B $GROUP
+\- contains the "group name" - an IP address (possibly multicast) representing
+the address to be used for sending announcements.
+.I Default: 255.255.255.255
+
+.B $CEXEC_MAXFD
+or
+.B $MAXFD
+\- contains the highest-numbered file descriptor to scan when multiplexing
+file descriptors over to the peer.
+.I Default: 32
+
+.B $CEXEC_TIMEOUT_ACCEPT
+\- the maximum amount of time (in seconds) that
+.B cexec
+will wait when attempting to locate a running copy of
+.I cservice(1)
+\- set to 0 in order to wait forever.
+.I Default: 60 seconds
+
+.B $CEXEC_FD_FOR_ERRORS
+\- a numeric file descriptor that must be greater than
+.B $CEXEC_MAXFD
+that extra status information will be written to after job completion or error.
+
+.B $CEXEC_LISTEN_PORTS
+\- a list of port numbers as
+.I a,b,c
+or including ranges
+.I a:b,c:d
+that will be the TCP port numbers
+.B cexec
+will expect a response on.
+.SH DIAGNOSTIC
+Setting
+.B $CEXEC_RATOUT_TEST
+will generate a ratout alert for
+.I crat(1)
+immediately after locating a host.
+
+Setting
+.B $CEXEC_TIMEOUT_PINGPONG
+to a number of seconds will allow you to test your application for
+what happens when the pingpong timeout expires. This shouldn't ordinarily
+be used - even when you're experiencing other problems.
+.SH EXIT CODES
+.B cexec
+normally maps all exit codes back to the calling process from the
+remote side. The exit code ``111'' may be synthesized by
+.B cexec
+to announce its own errors. All of these errors should be treated as
+temporary.
+.SH SEE ALSO
+ckeygen(1), cservice(1), crat(1), cproxy(1)

@@ -1,0 +1,15 @@
+cexec is likely portable to any 32-bit system. it is probably (largely)
+portable to 64-bit systems, but might not interoperate in mixed environments.
+
+your milage may vary. changes to support 64-bit and 16-bit systems (and other
+such devices) will be accepted.
+
+if your system can manage:
+	struct sockaddr_in.sin_port is EXACTLY 16 bits
+	struct sockaddr_in.sin_addr is EXACTLY 32 bits
+	in_addr_t is EXACTLY 32 bits
+	time_t is some size that the system has a built-in type for
+	sizeof(time_t) is smaller or equal to a sizeof(long)
+
+AND your build system/headers are C99 compliant, you should be okay.
+(if they're not, take a look at the bottom of types.h for help)

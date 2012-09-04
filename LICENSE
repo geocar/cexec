@@ -1,0 +1,58 @@
+bio.c
+bio.h
+cio.c
+cio.h
+cexec.c
+ckeygen.c
+cluster.h
+cryptotest.c
+cservice.c
+fdm.c
+fdset_copy.c
+keyfile.c
+keyfile.h
+load.c
+multipipe.c
+netnum.c
+netnum.h
+parity.c
+sockop.c
+sockop.h
+strline.c
+strline.h
+	these files make up the "meat" of cexec and are
+	Copyright (C) Internet Connection, 2004. They are hereby released
+	under the GNU Public License V2.
+
+hash.c
+	this contains an implementaion of the CDP hash and a trivial
+	implementation of a double-barrelled SHA1-driver. both are in the
+	public domain.
+
+sha1.c
+sha1.h
+	these files came from courier-imap by Sam Varshavchik and are
+	available under the GNU Public License V2.
+
+ec_crypt.c
+ec_crypt.h
+ec_curve.c
+ec_curve.h
+ec_field.c
+ec_field.h
+ec_param.c
+ec_param.h
+ec_vlong.c
+ec_vlong.h
+	these files came from a long lost version of Pegwit that was
+	placed into the public domain by George Barwood. They may contain
+	code written by Paulo S.L.M. Barreto, or Vincent Rijmen.
+	
+	The precalculated tables in ec_field.c were altered for the build
+	process, and because I abhor typing mixed-case functions, I ran the
+	files through the following filter:
+
+	$ perl -p -i -e 's/(cp|vl|gf|ec)([A-Z][a-zA-z]+)/$1."_".lc($2)/seg;'
+
+	There may have been other changes. they are all in the public
+	domain.

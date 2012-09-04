@@ -1,0 +1,43 @@
+.TH crat 1 "1.0" "Internet Connection, Inc." "Ad-Hoc Clusters"
+.SH NAME
+crat \- log ratout alerts from dissatisfied cexec runs
+.SH SYNOPSIS
+.B crat keys.pub...
+
+Logs errors that cexec detects. This tool should be used on every
+cluster to detect failed jobs and failing hosts.
+.SH DESCRIPTION
+.B crat
+writes log entries to standard ouput. They should be saved by a
+tool like
+.I multilog
+or
+.I splogger
+but they are not covered here.
+
+Log entries look like this:
+
+.I 10.0.0.5 rats out 10.0.0.3 for foo.pub
+ 
+.I 10.0.0.6 completed by 10.0.0.3 for foo.pub exit code 0
+ 
+.I 10.0.0.6 completed by 10.0.0.2 for foo.pub exit code 1
+
+It is left as an exercise to the imagination of the reader what
+to do with this information.
+
+.B NOTE
+that failures are normal. You should not be worried seeing one
+or two "rats out" lines periodically. You should be worried
+about several dozen lines worth, however.
+
+.SH ENVIRONMENT
+.B $GROUP
+\- contains the "group name" - an IP address (possibly multicast) representing
+the address to be used for receiving alerts.
+.I Default: 255.255.255.255
+.SH EXIT CODES
+.B crat
+normally doesn't exit. All exit codes are errors.
+.SH SEE ALSO
+ckeygen(1), cexec(1), cservice(1), cproxy(1)

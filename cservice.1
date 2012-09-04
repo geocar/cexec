@@ -1,0 +1,67 @@
+.TH cservice 1 "1.0" "Internet Connection, Inc." "Ad-Hoc Clusters"
+.SH NAME
+cservice \- accept work for a cluster application
+.SH SYNOPSIS
+.B cservice appid exe...
+
+Waits for a job request to be submitted by
+.I cexec(1)
+run with the public key for
+.B appid
+and runs
+.B exe
+.SH DESCRIPTION
+.B cservice
+listens for job requests on the network called
+.B $CEXEC_GROUP
+or
+.B $GROUP
+then waits for a period of time proportional to the current hosts'
+load, then sends a job-acceptance connection.
+.B cservice
+demultiplexes file descriptors sent by cexec and attaches them to
+the
+.B exe
+
+More information on this subject is covered in
+.I cexec(1)
+.SH ENVIRONMENT
+.B $GROUP
+\- contains the "group name" - an IP address (possibly multicast) representing
+the address to be used for receiving announcements.
+.I Default: 255.255.255.255
+
+.B $CONCURRENCY
+\- specifies the maximum number of children to run.
+.I Default: 50
+
+.B $REMOTE_ADDR
+\- set by cservice: contains the IP address of the calling
+.I cexec(1)
+
+.B $REMOTE_PORT
+\- set by cservice: contains the TCP port number of the calling
+.I cexec(1)
+
+.B $SERVER_ADDR
+\- set by cservice: contains the IP address of the
+.B cservice
+program.
+
+.B $SERVER_PORT
+\- set by cservice: contains the TCP port number of the
+.B cservice
+program.
+
+.B $PEER_*
+\- the calling
+.I cexec(1)
+can specify environment variables that will be prefaced with
+.B PEER_
+before being passed to the child process started by
+.B cservice
+.SH EXIT CODES
+.B cservice
+normally doesn't exit. All exit codes are errors.
+.SH SEE ALSO
+ckeygen(1), cexec(1), crat(1), cproxy(1)

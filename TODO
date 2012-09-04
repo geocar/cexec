@@ -1,0 +1,16 @@
+
+a "cancellation" message. a signed "response" that states a host was answered.
+this will prevent C from "cheating" and selecting a less-loaded host, AND
+reduce some network-chatter.
+
+need a routine to rat out bad hosts that have tried to connect to us,
+but didn't actually send any data.
+
+adding transport-layer security wouldn't be too difficult- it's possible
+a session key could have already been exchanged (passing the encrypted
+session key with the signed-key) but a bit-commitment protocol would be
+better.
+
+cservice should handle the bytesex if it's necessary, as it is, all our
+x86<->x86 communications do unnecessary transformations. cservice can already
+find this out.
